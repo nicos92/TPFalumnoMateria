@@ -4,6 +4,13 @@ SELECT *
 FROM alumnos
 ORDER BY idAlumno;
 
+-- obtener el id mas alto
+SELECT * 
+FROM ALumnos
+WHERE idAlumno = (
+SELECT max(idAlumno)
+FROM Alumnos);
+
 -- obtener todas las materias
 SELECT *
 FROM materias

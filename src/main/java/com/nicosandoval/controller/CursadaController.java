@@ -46,7 +46,7 @@ public class CursadaController implements InterController {
 
                                 if (materiaResult != null) {
 
-                                    if (materiasParaInscribirse.contains(materiaResult)) {
+                                    if (!materiasParaInscribirse.contains(materiaResult)) {
 
                                         Cursada cursada = new Cursada();
                                         cursada.setAlumno(Integer.parseInt(alumno));

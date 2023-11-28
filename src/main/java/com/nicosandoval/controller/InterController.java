@@ -1,4 +1,4 @@
-package com.nicosandoval.modelo;
+package com.nicosandoval.controller;
 
 public interface InterController {
 
@@ -7,7 +7,7 @@ public interface InterController {
     Object find();
 
 
-    String remove();
+    Object remove();
 
 
    Object update() ;

@@ -1,9 +1,12 @@
 package com.nicosandoval.repository;
 
-import com.nicosandoval.modelo.Materia;
+import com.nicosandoval.modeloEntity.Materia;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
+
+import java.util.List;
 
 public class MateriaRepo {
 
@@ -28,7 +31,7 @@ public class MateriaRepo {
             em.close();
             return materia;
         } catch (Exception e) {
-            System.out.println("Error catch Find Materia: " + materia + " - " + e.getMessage());
+            System.out.println("catch Find Materia: " + materia + " - " + e.getMessage());
         }
 
         return null;
@@ -36,10 +39,12 @@ public class MateriaRepo {
 
     /**
      *
-     * @param materia ingresa una clase Materia para insertar en la base de datos
+     * @param nomMateria ingresa un nombre para insertar en la base de datos
      * @return para saber si ingreso correctamente
      */
-    public String insertMateria(Materia materia) {
+    public String insertMateria(String nomMateria) {
+        Materia materia = new Materia();
+        materia.setNombreMateria(nomMateria);
 
         try (EntityManagerFactory EMF = Persistence
                 .createEntityManagerFactory("my-persistence-unit")) {
@@ -56,7 +61,7 @@ public class MateriaRepo {
             EM.close();
             return "Materia insertada" ;
         } catch (Exception e) {
-            System.out.println("Error catch insert Materia: " + e.getMessage());
+            System.out.println("catch insert Materia: " + e.getMessage());
         }
 
         return "Error al insertar Materia: " + materia;
@@ -78,6 +83,7 @@ public class MateriaRepo {
 
             em.getTransaction().begin();
             materia = em.find(Materia.class, idMateria);
+            System.out.println(materia);
 
 
             em.remove(materia);
@@ -88,7 +94,7 @@ public class MateriaRepo {
             em.close();
             return " Materia Remove: " + materia;
         } catch (Exception e) {
-            System.out.println("Error catch remove Materia: " + materia + " - " + e.getMessage());
+            System.out.println("catch remove Materia: " + materia + " - " + e.getMessage());
         }
 
         return null;
@@ -114,14 +120,35 @@ public class MateriaRepo {
 
             em.getTransaction().commit();
 
-
             emf.close();
             em.close();
             return materia;
         } catch (Exception e) {
-            System.out.println("Error catch update Materia: " + materia + " " + e.getMessage());
+            System.out.println("catch update Materia: " + materia + " " + e.getMessage());
         }
 
+        return null;
+    }
+
+    /**
+     *
+     * @return lista de entity MATERIA si puede traer, sino NULL
+     */
+    @SuppressWarnings("unchecked")
+    public List<Materia> getAllMateria() {
+
+        try (EntityManagerFactory emf = Persistence
+                .createEntityManagerFactory("my-persistence-unit")) {
+
+            EntityManager em = emf.createEntityManager();
+
+            Query query = em.createNativeQuery("SELECT * FROM materias WHERE idMateria <> 15 ORDER BY idMateria", Materia.class);
+
+            return query.getResultList();
+
+        } catch (Exception e) {
+            System.out.println("catch get all Materia: " + e.getMessage());
+        }
         return null;
     }
 }

@@ -8,10 +8,10 @@ import com.nicosandoval.repository.AlumnoRepo;
 import com.nicosandoval.repository.CursadaRepo;
 import com.nicosandoval.repository.MateriaRepo;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
-import static com.nicosandoval.Main.*;
+import static com.nicosandoval.utils.Utils.*;
 
 public class CursadaController implements InterController {
     private boolean confirm;
@@ -26,7 +26,7 @@ public class CursadaController implements InterController {
 
             System.out.println("Ingrese el ID del Alumno para hacer una nueva inscripcion\n 0 - Para salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -39,7 +39,7 @@ public class CursadaController implements InterController {
                         do {
                             System.out.println("Ingrese el ID de la materia\n 0 - Para salir");
                             materia = scanner.nextLine();
-                            confirm = isValidNum(materia);
+                            confirm = isValidCaracteres(materia,numPattern);
 
                             if (confirm && !materia.equals("0")) {
                                 Materia materiaResult = new MateriaRepo().findMateria(Integer.parseInt(materia));
@@ -84,7 +84,7 @@ public class CursadaController implements InterController {
 
             System.out.println("Ingrese el ID del Cursada para buscar\n 0 - Para salir");
             cursada = scanner.nextLine();
-            confirm = isValidNum(cursada);
+            confirm = isValidCaracteres(cursada,numPattern);
 
             if (confirm && !cursada.equals("0")) {
 
@@ -109,7 +109,7 @@ public class CursadaController implements InterController {
         do {
             System.out.println("Ingrese el ID de la Cursada a Remover\n 0 - Para salir");
             cursada = scanner.nextLine();
-            confirm = isValidNum(cursada);
+            confirm = isValidCaracteres(cursada,numPattern);
 
             if (confirm && !cursada.equals("0")) {
                 Cursada resultado = new CursadaRepo().findCursada(Integer.parseInt(cursada));
@@ -134,7 +134,7 @@ public class CursadaController implements InterController {
         do {
             System.out.println("Ingrese el ID de la Cursada para modificar la aprobacion\n 0 - Para salir");
             cursada = scanner.nextLine();
-            confirm = isValidNum(cursada);
+            confirm = isValidCaracteres(cursada,numPattern);
 
             if (confirm && !cursada.equals("0")) {
                 Cursada resultado = new CursadaRepo().findCursada(Integer.parseInt(cursada));
@@ -181,33 +181,5 @@ public class CursadaController implements InterController {
         return null;
     }
 
-    public List<Materia> getListMateriaInscribirse(String alumno){
 
-        List<Materia> materiasParaInscribirse = new ArrayList<>();
-
-        List<Materia> NoCursadasList = new AlumnoRepo().getMateriasNoCursadas(Integer.parseInt(alumno));
-        List<Materia> aprobadasList = new AlumnoRepo().getMateriasAprobadas(Integer.parseInt(alumno));
-
-        if (!aprobadasList.isEmpty()) {
-            aprobadasList.forEach(aprobada -> NoCursadasList.forEach(noCursada -> {
-                        if ((aprobada.getIdMateria() == noCursada.getIdMateriaCorreletiva()
-                                || noCursada.getIdMateriaCorreletiva() == 0)
-                                && !materiasParaInscribirse.contains(noCursada)) {
-
-                            System.out.println(noCursada);
-                            materiasParaInscribirse.add(noCursada);
-                        }
-                    })
-            );
-        } else {
-            NoCursadasList.forEach(aprobada -> {
-                if (aprobada.getIdMateriaCorreletiva() == 0) {
-
-                    System.out.println(aprobada);
-                    materiasParaInscribirse.add(aprobada);
-                }
-            });
-        }
-        return materiasParaInscribirse;
-    }
 }

@@ -10,7 +10,7 @@ import com.nicosandoval.repository.CursadaRepo;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.nicosandoval.Main.*;
+import static com.nicosandoval.utils.Utils.*;
 
 public class AlumnoController implements InterController {
 
@@ -23,7 +23,7 @@ public class AlumnoController implements InterController {
         do {
             System.out.println("Ingrese el nombre del Alumno para insertar\n 0 - Para salir");
             alumno = scanner.nextLine();
-            confirm = isValidLetra(alumno);
+            confirm = isValidCaracteres(alumno,letraPattern);
 
             if (confirm) {
                 String result = new AlumnoRepo().insertAlumno(alumno);
@@ -48,7 +48,7 @@ public class AlumnoController implements InterController {
 
             System.out.println("Ingrese el ID del Alumno para buscar\n 0 - Para salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno, numPattern);
 
             if (confirm && !alumno.equals("0")) {
 
@@ -75,7 +75,7 @@ public class AlumnoController implements InterController {
         do {
             System.out.println("Ingrese el ID del Alumno a Remover\n 0 - Para salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -116,7 +116,7 @@ public class AlumnoController implements InterController {
         do {
             System.out.println("Ingrese el ID del Alumno para modificar el nombre\n 0 - Para salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -126,7 +126,7 @@ public class AlumnoController implements InterController {
                     do {
                         System.out.println("Ingrese el nuevo nombre del Alumno");
                         String nuevoNombre = scanner.nextLine();
-                        confirm = isValidLetra(nuevoNombre);
+                        confirm = isValidCaracteres(nuevoNombre, letraPattern);
                         if (confirm) {
                             Alumno resultadoNombre = new AlumnoRepo().updateNameAlumno(Integer.parseInt(alumno), nuevoNombre);
                             System.out.println(resultadoNombre);
@@ -155,7 +155,7 @@ public class AlumnoController implements InterController {
         do {
             System.out.println("Ingrese el ID del Alumno para obtener materias aprobadas\n 0 - Para Salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -179,7 +179,7 @@ public class AlumnoController implements InterController {
         do {
             System.out.println("Ingrese el ID del Alumno para obtener materias Desaprobadas\n 0 - Para Salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -202,7 +202,7 @@ public class AlumnoController implements InterController {
         do {
             System.out.println("Ingrese el ID del Alumno para obtener materias Cursadas\n 0 - Para Salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -225,7 +225,7 @@ public class AlumnoController implements InterController {
         do {
             System.out.println("Ingrese el ID del Alumno para obtener materias No Cursadas\n 0 - Para Salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -243,13 +243,13 @@ public class AlumnoController implements InterController {
         return null;
     }
 
-    public List<Materia> getMateriasParaInscribirse() {
+    public void getMateriasParaInscribirse() {
 
 
         do {
             System.out.println("Ingrese el ID del Alumno para obtener materias a inscribirse\n 0 - Para Salir");
             alumno = scanner.nextLine();
-            confirm = isValidNum(alumno);
+            confirm = isValidCaracteres(alumno,numPattern);
 
             if (confirm && !alumno.equals("0")) {
                 Alumno resultado = new AlumnoRepo().findAlumno(Integer.parseInt(alumno));
@@ -257,7 +257,7 @@ public class AlumnoController implements InterController {
                 if (resultado != null) {
                     List<Materia> materiaList = getListMateriaInscribirse(alumno);
                     Log.crearArchivoLog("Alumno - get Materias Para inscribirse - ", materiaList.size() + " - " + resultado);
-                    return materiaList;
+                    return;
                 } else System.out.println("ID no existe\nIntente Nuevamente");
 
             } else if (!alumno.equals("0")) {
@@ -266,7 +266,6 @@ public class AlumnoController implements InterController {
 
         } while (!alumno.equals("0"));
 
-        return null;
     }
 
     public String alumnoMateriaInscripcion() {
@@ -276,36 +275,7 @@ public class AlumnoController implements InterController {
 
     }
 
-    public List<Materia> getListMateriaInscribirse(String alumno) {
 
-        List<Materia> materiasParaInscribirse = new ArrayList<>();
-
-        List<Materia> NoCursadasList = new AlumnoRepo().getMateriasNoCursadas(Integer.parseInt(alumno));
-
-        List<Materia> aprobadasList = new AlumnoRepo().getMateriasAprobadas(Integer.parseInt(alumno));
-
-        if (!aprobadasList.isEmpty()) {
-            aprobadasList.forEach(aprobada -> NoCursadasList.forEach(noCursada -> {
-                        if ((aprobada.getIdMateria() == noCursada.getIdMateriaCorreletiva()
-                                || noCursada.getIdMateriaCorreletiva() == 0)
-                                && !materiasParaInscribirse.contains(noCursada)) {
-
-                            System.out.println(noCursada);
-                            materiasParaInscribirse.add(noCursada);
-                        }
-                    })
-            );
-        } else {
-            NoCursadasList.forEach(aprobada -> {
-                if (aprobada.getIdMateriaCorreletiva() == 0) {
-
-                    System.out.println(aprobada);
-                    materiasParaInscribirse.add(aprobada);
-                }
-            });
-        }
-        return materiasParaInscribirse;
-    }
 
 
 }

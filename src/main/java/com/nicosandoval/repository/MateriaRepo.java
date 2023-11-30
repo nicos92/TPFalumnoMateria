@@ -151,4 +151,30 @@ public class MateriaRepo {
         }
         return null;
     }
+
+    public Materia updateIdCorrelativa(int i, String nuevoID) {
+        Materia materia = null;
+        try (EntityManagerFactory emf = Persistence
+                .createEntityManagerFactory("my-persistence-unit")) {
+
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            materia = em.find(Materia.class, i);
+            materia.setIdMateriaCorreletiva(Integer.parseInt(nuevoID));
+
+
+            System.out.println("materia repo: " + materia);
+            em.persist(materia);
+
+            em.getTransaction().commit();
+
+            emf.close();
+            em.close();
+            return materia;
+        } catch (Exception e) {
+            System.out.println("catch update Materia: " + materia + " " + e.getMessage());
+        }
+
+        return null;
+    }
 }

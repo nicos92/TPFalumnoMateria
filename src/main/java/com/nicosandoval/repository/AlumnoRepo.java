@@ -63,6 +63,35 @@ public class AlumnoRepo {
     }
 
     /**
+     * @param idAlumno  es para aidentificar al alumno
+     * @param newNombre String que se envia para modificar el nombre
+     * @return para saber si se modifico correctamente
+     */
+    public Alumno updateNameAlumno(int idAlumno, String newNombre) {
+        Alumno alumno1 = null;
+        try (EntityManagerFactory emf = Persistence
+                .createEntityManagerFactory("my-persistence-unit")) {
+
+            EntityManager em = emf.createEntityManager();
+            em.getTransaction().begin();
+            alumno1 = em.find(Alumno.class, idAlumno);
+            alumno1.setNombreAlumno(newNombre);
+
+            em.persist(alumno1);
+
+            em.getTransaction().commit();
+
+            emf.close();
+            em.close();
+            return alumno1;
+        } catch (Exception e) {
+            System.out.println("catch update Alumno: " + alumno1 + " " + e.getMessage());
+        }
+
+        return null;
+    }
+
+    /**
      * @param idAlumno para buscar al alumno a remover
      * @return para saber si se removio correctamente
      */
@@ -91,34 +120,7 @@ public class AlumnoRepo {
         return null;
     }
 
-    /**
-     * @param idAlumno  es para aidentificar al alumno
-     * @param newNombre String que se envia para modificar el nombre
-     * @return para saber si se modifico correctamente
-     */
-    public Alumno updateNameAlumno(int idAlumno, String newNombre) {
-        Alumno alumno1 = null;
-        try (EntityManagerFactory emf = Persistence
-                .createEntityManagerFactory("my-persistence-unit")) {
 
-            EntityManager em = emf.createEntityManager();
-            em.getTransaction().begin();
-            alumno1 = em.find(Alumno.class, idAlumno);
-            alumno1.setNombreAlumno(newNombre);
-
-            em.persist(alumno1);
-
-            em.getTransaction().commit();
-
-            emf.close();
-            em.close();
-            return alumno1;
-        } catch (Exception e) {
-            System.out.println("catch update Alumno: " + alumno1 + " " + e.getMessage());
-        }
-
-        return null;
-    }
 
 
     /**
@@ -244,4 +246,6 @@ public class AlumnoRepo {
         return null;
 
     }
+
+
 }

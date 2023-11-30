@@ -13,39 +13,14 @@ import com.nicosandoval.repository.MateriaRepo;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static com.nicosandoval.utils.Utils.scanner;
 
 public class Main {
     // martes 28 examen online
     // juevese 30 entrega tp final
     //
-    public static Scanner scanner = new Scanner(System.in);
 
-    public static final String alfaNumPattern = "^[\\w- ]+$";
-
-    public static final String numPattern = "^(0|[1-9][0-9]*)$";
-    public static final String letraPattern = "^[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+(\\s*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]*)*[a-zA-ZÀ-ÿ\\u00f1\\u00d1]+$";
-
-    private static final Pattern patternNum = Pattern.compile(numPattern);
-    private static final Pattern patternLetra = Pattern.compile(letraPattern);
-
-    public static boolean isValidNum(String opcion) {
-        Matcher matcher = patternNum.matcher(opcion);
-        return matcher.matches();
-    }
-
-    public static boolean isValidLetra(String opcion) {
-        Matcher matcher = patternLetra.matcher(opcion);
-        return matcher.matches();
-    }
-
-    public static boolean isValidCaracteres(String opcion, String tipoPattern) {
-        Pattern miPattern = Pattern.compile(tipoPattern);
-        Matcher matcher = miPattern.matcher(opcion);
-        return matcher.matches();
-    }
 
 
     public static void main(String[] args) {
@@ -132,6 +107,8 @@ public class Main {
                     3- Insertar nueva Materia
                     4- Actulizar nombre de Materia
                     5- Remover Materia
+                    6- Actulizar ID de Materia Correlativa
+                    
 
                     0- Salir""");
 
@@ -152,6 +129,8 @@ public class Main {
                 case "4" -> System.out.println(Objects.requireNonNullElse(new MateriaController().update(), ""));
 
                 case "5" -> System.out.println(Objects.requireNonNullElse(new MateriaController().remove(), ""));
+
+                case "6" -> System.out.println(Objects.requireNonNullElse(new MateriaController().updateMateriaCorrelativa(), ""));
 
 
                 case "0" -> System.out.println("Adios");
@@ -229,10 +208,7 @@ public class Main {
                         materiaList.forEach(System.out::println);
                     }
                 }
-                case "10" -> {
-                    List<Materia> materiaList = new AlumnoController().getMateriasParaInscribirse();
-
-                }
+                case "10" -> new AlumnoController().getMateriasParaInscribirse();
 
                 case "11" ->
                     System.out.println(Objects.requireNonNullElse(new AlumnoController().alumnoMateriaInscripcion(), ""));

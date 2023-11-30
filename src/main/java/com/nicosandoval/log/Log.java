@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 public class Log {
+
+
     public static void crearArchivoLog(String titulo, String descr){
         String path = "LOG\\" + LocalDate.now().getYear()  + " " +  LocalDate.now().getMonth() +
                 "\\TEP " + LocalDate.now().getYear() + " " +  LocalDate.now().getMonth() + " " +  LocalDate.now().getDayOfMonth() + ".log";
